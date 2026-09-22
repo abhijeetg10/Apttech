@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import DriveSyncButton from "./DriveSyncButton";
 import Link from "next/link";
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminDashboard() {
   const [totalStudents, totalBatches, totalLectures, batches] = await Promise.all([
     prisma.user.count({ where: { role: 'STUDENT' } }),
