@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String            @id @default(uuid())
+  email           String            @unique
+  password        String?
+  name            String
+  role            String            @default("STUDENT") // ADMIN or STUDENT
+  rollNumber      String?
+  collegeName     String?
+  batchId         String?
+  batch           Batch?            @relation(fields: [batchId], references: [id])
+  lectureProgress LectureProgress[]
+}
+
+model Batch {
+  id             String    @id @default(uuid())
+  name           String    @unique // e.g., JDBC-06
+  faculty        String?   // Default faculty for the batch
+  driveFolderId  String?   // Google Drive Folder ID for sync
+  status         String    @default("Active") // Active, Completed
+  startDate      DateTime?
+  students       User[]
+  lectures       Lecture[]
+}
+
+model Lecture {
+  id              String            @id @default(uuid())
+  title           String
+  subject         String
+  faculty         String
+  date            DateTime
+  duration        Int?              // in minutes
+  meetLink        String?
+  driveVideoId    String?           // Matched from Google Drive
+  status          String            @default("Scheduled") // Scheduled, Recording Available, Needs Review
+  batchId         String
+  batch           Batch             @relation(fields: [batchId], references: [id])
+  lectureProgress LectureProgress[]
+}
+
+model LectureProgress {
+  id        String   @id @default(uuid())
+  userId    String
+  lectureId String
+  completed Boolean  @default(false)
+  watchedAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lecture   Lecture  @relation(fields: [lectureId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lectureId])
+}

@@ -1,0 +1,24 @@
+.appContainer {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--color-bg);
+}
+
+.mainContent {
+  flex: 1;
+  margin-left: 260px; /* Width of the sidebar */
+  display: flex;
+  flex-direction: column;
+}
+
+.pageContent {
+  padding: 2rem;
+  flex: 1;
+  overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .mainContent {
+    margin-left: 0;
+  }
+}
