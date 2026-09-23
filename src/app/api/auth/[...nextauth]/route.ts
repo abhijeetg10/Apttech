@@ -17,6 +17,18 @@ export const authOptions: NextAuthOptions = {
         where: { email: user.email }
       });
       
+      // Auto-provision master admin
+      if (!dbUser && user.email === 'apttechtest.in@gmail.com') {
+        await prisma.user.create({
+          data: {
+            email: user.email,
+            name: user.name || "Apttech Admin",
+            role: "ADMIN"
+          }
+        });
+        return true;
+      }
+      
       // Only allow login if the email exists in our database
       if (dbUser) {
         return true;

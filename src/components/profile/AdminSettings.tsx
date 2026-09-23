@@ -3,6 +3,7 @@
 import { useState } from "react";
 import styles from "./AdminSettings.module.css";
 import { useSession } from "next-auth/react";
+import AdminManagement from "./AdminManagement";
 
 interface AdminSettingsProps {
   initialName: string;
@@ -11,6 +12,7 @@ interface AdminSettingsProps {
 
 export default function AdminSettings({ initialName, email }: AdminSettingsProps) {
   const { update } = useSession();
+  const [activeTab, setActiveTab] = useState("profile");
   const [name, setName] = useState(initialName);
   const [status, setStatus] = useState<{ type: 'success' | 'error', message: string } | null>(null);
   const [loading, setLoading] = useState(false);
@@ -54,8 +56,17 @@ export default function AdminSettings({ initialName, email }: AdminSettingsProps
       <div className={styles.layout}>
         {/* Sidebar Navigation */}
         <div className={styles.sidebar}>
-          <div className={`${styles.navItem} ${styles.active}`}>
+          <div 
+            className={`${styles.navItem} ${activeTab === 'profile' ? styles.active : ''}`}
+            onClick={() => setActiveTab('profile')}
+          >
             General Profile
+          </div>
+          <div 
+            className={`${styles.navItem} ${activeTab === 'admins' ? styles.active : ''}`}
+            onClick={() => setActiveTab('admins')}
+          >
+            Administrators
           </div>
           <div className={styles.navItem}>
             Security & Authentication
@@ -67,69 +78,75 @@ export default function AdminSettings({ initialName, email }: AdminSettingsProps
 
         {/* Main Content Area */}
         <div className={styles.content}>
-          <div className={styles.card}>
-            <div className={styles.cardHeader}>
-              <h2>Profile Information</h2>
-              <p>Update your admin display name.</p>
-            </div>
+          {activeTab === 'profile' && (
+            <>
+              <div className={styles.card}>
+                <div className={styles.cardHeader}>
+                  <h2>Profile Information</h2>
+                  <p>Update your admin display name.</p>
+                </div>
 
-            {status && (
-              <div className={`${styles.message} ${styles[status.type]}`}>
-                {status.message}
-              </div>
-            )}
+                {status && (
+                  <div className={`${styles.message} ${styles[status.type]}`}>
+                    {status.message}
+                  </div>
+                )}
 
-            <form onSubmit={handleSubmit} className={styles.form}>
-              <div className={styles.formGroup}>
-                <label className="form-label">Administrator Name</label>
-                <input 
-                  type="text" 
-                  className="form-input" 
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                />
+                <form onSubmit={handleSubmit} className={styles.form}>
+                  <div className={styles.formGroup}>
+                    <label className="form-label">Administrator Name</label>
+                    <input 
+                      type="text" 
+                      className="form-input" 
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      required
+                    />
+                  </div>
+
+                  <div className={styles.formGroup}>
+                    <label className="form-label">Primary Email Address</label>
+                    <input 
+                      type="email" 
+                      className="form-input" 
+                      value={email}
+                      disabled
+                    />
+                    <p className={styles.helpText}>
+                      Your email is locked. It is tied directly to your Google OAuth authentication.
+                    </p>
+                  </div>
+
+                  <div className={styles.actions}>
+                    <button 
+                      type="submit" 
+                      className={`primary-button ${styles.submitBtn}`}
+                      disabled={loading || name === initialName}
+                    >
+                      {loading ? "Saving Changes..." : "Save Changes"}
+                    </button>
+                  </div>
+                </form>
               </div>
 
-              <div className={styles.formGroup}>
-                <label className="form-label">Primary Email Address</label>
-                <input 
-                  type="email" 
-                  className="form-input" 
-                  value={email}
-                  disabled
-                />
-                <p className={styles.helpText}>
-                  Your email is locked. It is tied directly to your Google OAuth authentication.
-                </p>
+              <div className={styles.card}>
+                <div className={styles.cardHeader}>
+                  <h2>Authentication & Security</h2>
+                </div>
+                <div className={styles.securityBox}>
+                  <div className={styles.securityIcon}>🔒</div>
+                  <div>
+                    <h4 style={{ marginBottom: "4px" }}>Google OAuth Enabled</h4>
+                    <p style={{ fontSize: "0.85rem", color: "var(--color-text-muted)" }}>
+                      Password management is completely handled by Google. Your account is secured via OAuth 2.0.
+                    </p>
+                  </div>
+                </div>
               </div>
+            </>
+          )}
 
-              <div className={styles.actions}>
-                <button 
-                  type="submit" 
-                  className={`primary-button ${styles.submitBtn}`}
-                  disabled={loading || name === initialName}
-                >
-                  {loading ? "Saving Changes..." : "Save Changes"}
-                </button>
-              </div>
-            </form>
-          </div>
-
-          <div className={styles.card}>
-            <div className={styles.cardHeader}>
-              <h2>Authentication & Security</h2>
-            </div>
-            <div className={styles.securityBox}>
-              <div className={styles.securityIcon}>🔒</div>
-              <div>
-                <h4 style={{ marginBottom: "4px" }}>Google OAuth Enabled</h4>
-                <p style={{ fontSize: "0.85rem", color: "var(--color-text-muted)" }}>
-                  Password management is completely handled by Google. Your account is secured via OAuth 2.0.
-                </p>
-              </div>
-            </div>
-          </div>
+          {activeTab === 'admins' && <AdminManagement />}
         </div>
       </div>
     </div>
