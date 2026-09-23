@@ -16,6 +16,8 @@ interface UserProfileProps {
 export default function UserProfile({ initialName, email, batchName, role, rollNumber, collegeName }: UserProfileProps) {
   const { update } = useSession();
   const [name, setName] = useState(initialName);
+  const [editCollegeName, setEditCollegeName] = useState(collegeName || "");
+  const [editRollNumber, setEditRollNumber] = useState(rollNumber || "");
   const [status, setStatus] = useState<{ type: 'success' | 'error', message: string } | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -32,7 +34,11 @@ export default function UserProfile({ initialName, email, batchName, role, rollN
       const res = await fetch("/api/user/profile", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name }),
+        body: JSON.stringify({ 
+          name, 
+          collegeName: editCollegeName, 
+          rollNumber: editRollNumber 
+        }),
       });
 
       const data = await res.json();
@@ -83,11 +89,11 @@ export default function UserProfile({ initialName, email, batchName, role, rollN
                 </div>
                 <div className={styles.detailGroup}>
                   <span className={styles.detailLabel}>Roll No.</span>
-                  <span className={styles.detailValue}>{rollNumber || "-"}</span>
+                  <span className={styles.detailValue}>{editRollNumber || "-"}</span>
                 </div>
                 <div className={styles.detailGroup} style={{ gridColumn: "1 / -1" }}>
                   <span className={styles.detailLabel}>College / Institution</span>
-                  <span className={styles.detailValue}>{collegeName || "-"}</span>
+                  <span className={styles.detailValue}>{editCollegeName || "-"}</span>
                 </div>
               </>
             )}
@@ -108,15 +114,44 @@ export default function UserProfile({ initialName, email, batchName, role, rollN
               required
             />
           </div>
+          
+          {role === "STUDENT" && (
+            <>
+              <div className={styles.formGroup}>
+                <label className="form-label">Roll No.</label>
+                <input 
+                  type="text" 
+                  className="form-input" 
+                  value={editRollNumber}
+                  onChange={(e) => setEditRollNumber(e.target.value)}
+                  placeholder="e.g. 101"
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <label className="form-label">College / Institution</label>
+                <input 
+                  type="text" 
+                  className="form-input" 
+                  value={editCollegeName}
+                  onChange={(e) => setEditCollegeName(e.target.value)}
+                  placeholder="e.g. MIT"
+                />
+              </div>
+            </>
+          )}
+
           <p className={styles.helpText}>
-            Note: Email, Batch, Roll No, and College can only be updated by the Administrator. 
+            Note: Email and Batch can only be updated by the Administrator. 
             Passwords are managed via your Google Account.
           </p>
 
           <button 
             type="submit" 
             className={`primary-button ${styles.submitBtn}`}
-            disabled={loading || name === initialName}
+            disabled={
+              loading || 
+              (name === initialName && editRollNumber === (rollNumber || "") && editCollegeName === (collegeName || ""))
+            }
           >
             {loading ? "Saving..." : "Save Changes"}
           </button>

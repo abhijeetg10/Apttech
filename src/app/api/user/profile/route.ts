@@ -13,7 +13,7 @@ export async function PUT(request: Request) {
 
   try {
     const body = await request.json();
-    const { name, currentPassword, newPassword } = body;
+    const { name, collegeName, rollNumber } = body;
 
     const user = await prisma.user.findUnique({
       where: { email: session.user.email }
@@ -25,8 +25,16 @@ export async function PUT(request: Request) {
 
     const dataToUpdate: any = {};
 
-    if (name && name !== user.name) {
+    if (name !== undefined && name !== user.name) {
       dataToUpdate.name = name;
+    }
+    
+    if (collegeName !== undefined && collegeName !== user.collegeName) {
+      dataToUpdate.collegeName = collegeName;
+    }
+    
+    if (rollNumber !== undefined && rollNumber !== user.rollNumber) {
+      dataToUpdate.rollNumber = rollNumber;
     }
 
     if (Object.keys(dataToUpdate).length === 0) {
