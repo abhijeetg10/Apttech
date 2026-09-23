@@ -37,17 +37,29 @@ export async function GET(req: Request) {
     const errors: string[] = [];
 
     let auth;
-    
-    // Attempt to load credentials from json file directly to bypass any .env parsing issues
-    const credsPath = path.join(process.cwd(), "google-credentials.json");
-    if (fs.existsSync(credsPath)) {
+
+    // 1. Try Environment Variables (Vercel)
+    if (process.env.GOOGLE_CLIENT_EMAIL && process.env.GOOGLE_PRIVATE_KEY) {
+      // Vercel might escape newlines, so we replace \n with actual newlines
+      const privateKey = process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n');
+      auth = new google.auth.JWT({
+        email: process.env.GOOGLE_CLIENT_EMAIL,
+        key: privateKey,
+        scopes: ['https://www.googleapis.com/auth/drive.readonly']
+      });
+    } 
+    // 2. Try Local JSON file (Development)
+    else if (fs.existsSync(path.join(process.cwd(), "google-credentials.json"))) {
+      const credsPath = path.join(process.cwd(), "google-credentials.json");
       const creds = JSON.parse(fs.readFileSync(credsPath, "utf8"));
       auth = new google.auth.JWT({
         email: creds.client_email,
         key: creds.private_key,
         scopes: ['https://www.googleapis.com/auth/drive.readonly']
       });
-    } else {
+    } 
+    // 3. Fallback to Demo Mode
+    else {
       return NextResponse.json({ 
         message: "Demo Mode: Synced 12 new recordings successfully! (Add Google credentials to enable real sync)",
         status: "success" 
