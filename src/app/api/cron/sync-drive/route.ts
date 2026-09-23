@@ -41,8 +41,8 @@ export async function GET(req: Request) {
     // 1. Try Environment Variables (Vercel)
     if (process.env.GOOGLE_CLIENT_EMAIL && process.env.GOOGLE_PRIVATE_KEY) {
       let rawKey = process.env.GOOGLE_PRIVATE_KEY;
-      // Strip any accidental leading/trailing quotes
-      rawKey = rawKey.replace(/^["']|["']$/g, '');
+      // Strip any accidental leading/trailing quotes and whitespace
+      rawKey = rawKey.replace(/^["']|["']$/g, '').trim();
       // Vercel might escape newlines, so we replace \n with actual newlines
       const privateKey = rawKey.replace(/\\n/g, '\n');
       
