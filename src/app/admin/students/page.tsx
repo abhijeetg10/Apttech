@@ -237,46 +237,48 @@ export default function StudentsPage() {
       </div>
 
       <div className={styles.card}>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Roll No.</th>
-              <th>College</th>
-              <th>Email</th>
-              <th>Batch</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {students.map(student => (
-              <tr key={student.id}>
-                <td style={{ fontWeight: 600 }}>{student.name}</td>
-                <td>{student.rollNumber || "-"}</td>
-                <td>{student.collegeName || "-"}</td>
-                <td style={{ color: "var(--color-text-muted)" }}>{student.email}</td>
-                <td>
-                  {student.batch ? (
-                    <span className={styles.batchBadge}>{student.batch.name}</span>
-                  ) : (
-                    <span className={`${styles.batchBadge} ${styles.unassigned}`}>Unassigned</span>
-                  )}
-                </td>
-                <td>
-                  <div className={styles.actions}>
-                    <button className={styles.actionBtn} onClick={() => openModal(student)} title="Edit">✏️</button>
-                    <button className={styles.actionBtn} onClick={() => handleDelete(student.id)} title="Delete">🗑️</button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-            {students.length === 0 && (
+        <div className={styles.tableContainer}>
+          <table className={styles.table}>
+            <thead>
               <tr>
-                <td colSpan={6} style={{ textAlign: "center", padding: "2rem" }}>No students found.</td>
+                <th>Name</th>
+                <th>Roll No.</th>
+                <th>College</th>
+                <th>Email</th>
+                <th>Batch</th>
+                <th>Actions</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {students.map(student => (
+                <tr key={student.id}>
+                  <td style={{ fontWeight: 600 }}>{student.name}</td>
+                  <td>{student.rollNumber || "-"}</td>
+                  <td>{student.collegeName || "-"}</td>
+                  <td style={{ color: "var(--color-text-muted)" }}>{student.email}</td>
+                  <td>
+                    {student.batch ? (
+                      <span className={styles.batchBadge}>{student.batch.name}</span>
+                    ) : (
+                      <span className={`${styles.batchBadge} ${styles.unassigned}`}>Unassigned</span>
+                    )}
+                  </td>
+                  <td>
+                    <div className={styles.actions}>
+                      <button className={styles.actionBtn} onClick={() => openModal(student)} title="Edit">✏️</button>
+                      <button className={styles.actionBtn} onClick={() => handleDelete(student.id)} title="Delete">🗑️</button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+              {students.length === 0 && (
+                <tr>
+                  <td colSpan={6} style={{ textAlign: "center", padding: "2rem" }}>No students found.</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {isModalOpen && (

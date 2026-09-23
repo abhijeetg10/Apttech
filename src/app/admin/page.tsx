@@ -79,33 +79,35 @@ export default async function AdminDashboard() {
             <h3>Recent Batches</h3>
             <Link href="/admin/batches" className={styles.viewAll}>View All</Link>
           </div>
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th>Batch Name</th>
-                <th>Students</th>
-                <th>Start Date</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {batches.map(batch => (
-                <tr key={batch.id}>
-                  <td style={{ fontWeight: 600 }}>{batch.name}</td>
-                  <td>{batch._count.students}</td>
-                  <td>{batch.startDate ? new Date(batch.startDate).toLocaleDateString() : 'N/A'}</td>
-                  <td><span className={`${styles.statusBadge} ${batch.status === 'Active' ? styles.active : styles.completed}`}>{batch.status}</span></td>
-                  <td>...</td>
-                </tr>
-              ))}
-              {batches.length === 0 && (
+          <div className={styles.tableContainer}>
+            <table className={styles.table}>
+              <thead>
                 <tr>
-                  <td colSpan={5} style={{ textAlign: "center", padding: "1rem" }}>No batches found.</td>
+                  <th>Batch Name</th>
+                  <th>Students</th>
+                  <th>Start Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
                 </tr>
-              )}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {batches.map(batch => (
+                  <tr key={batch.id}>
+                    <td style={{ fontWeight: 600 }}>{batch.name}</td>
+                    <td>{batch._count.students}</td>
+                    <td>{batch.startDate ? new Date(batch.startDate).toLocaleDateString() : 'N/A'}</td>
+                    <td><span className={`${styles.statusBadge} ${batch.status === 'Active' ? styles.active : styles.completed}`}>{batch.status}</span></td>
+                    <td>...</td>
+                  </tr>
+                ))}
+                {batches.length === 0 && (
+                  <tr>
+                    <td colSpan={5} style={{ textAlign: "center", padding: "1rem" }}>No batches found.</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         <div className={styles.card}>

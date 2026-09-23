@@ -7,9 +7,11 @@ import styles from "./Sidebar.module.css";
 
 interface SidebarProps {
   role: "STUDENT" | "ADMIN";
+  isOpen: boolean;
+  closeSidebar: () => void;
 }
 
-export default function Sidebar({ role }: SidebarProps) {
+export default function Sidebar({ role, isOpen, closeSidebar }: SidebarProps) {
   const pathname = usePathname();
 
   const studentLinks = [
@@ -61,9 +63,15 @@ export default function Sidebar({ role }: SidebarProps) {
   const links = role === "ADMIN" ? adminLinks : studentLinks;
 
   return (
-    <aside className={styles.sidebar}>
+    <aside className={`${styles.sidebar} ${isOpen ? styles.open : ""}`}>
       <div className={styles.brand}>
         <img src="/images/logo.png" alt="APTTECH" style={{ width: "100%", maxWidth: "160px", objectFit: "contain", margin: "0 auto" }} />
+        <button className={styles.closeButton} onClick={closeSidebar}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
       </div>
 
       <nav className={styles.nav}>

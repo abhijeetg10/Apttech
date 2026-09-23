@@ -147,48 +147,50 @@ export default function LecturesPage() {
       </div>
 
       <div className={styles.card}>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>Title & Subject</th>
-              <th>Batch</th>
-              <th>Date</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {lectures.map(lecture => (
-              <tr key={lecture.id}>
-                <td>
-                  <div style={{ fontWeight: 600 }}>{lecture.title}</div>
-                  <div style={{ fontSize: "0.8rem", color: "var(--color-text-muted)" }}>{lecture.subject} • {lecture.faculty}</div>
-                </td>
-                <td>{lecture.batch?.name}</td>
-                <td>
-                  <div style={{ whiteSpace: "nowrap" }}>{new Date(lecture.date).toLocaleDateString()}</div>
-                  {lecture.duration && <div style={{ fontSize: "0.8rem", color: "var(--color-text-muted)" }}>{lecture.duration} mins</div>}
-                </td>
-                <td>
-                  <span className={`${styles.statusBadge} ${getStatusClass(lecture.status)}`}>
-                    {lecture.status}
-                  </span>
-                </td>
-                <td>
-                  <div className={styles.actions}>
-                    <button className={styles.actionBtn} onClick={() => openModal(lecture)} title="Edit">✏️</button>
-                    <button className={styles.actionBtn} onClick={() => handleDelete(lecture.id)} title="Delete">🗑️</button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-            {lectures.length === 0 && (
+        <div className={styles.tableContainer}>
+          <table className={styles.table}>
+            <thead>
               <tr>
-                <td colSpan={5} style={{ textAlign: "center", padding: "2rem" }}>No lectures found.</td>
+                <th>Title & Subject</th>
+                <th>Batch</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Actions</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {lectures.map(lecture => (
+                <tr key={lecture.id}>
+                  <td>
+                    <div style={{ fontWeight: 600 }}>{lecture.title}</div>
+                    <div style={{ fontSize: "0.8rem", color: "var(--color-text-muted)" }}>{lecture.subject} • {lecture.faculty}</div>
+                  </td>
+                  <td>{lecture.batch?.name}</td>
+                  <td>
+                    <div style={{ whiteSpace: "nowrap" }}>{new Date(lecture.date).toLocaleDateString()}</div>
+                    {lecture.duration && <div style={{ fontSize: "0.8rem", color: "var(--color-text-muted)" }}>{lecture.duration} mins</div>}
+                  </td>
+                  <td>
+                    <span className={`${styles.statusBadge} ${getStatusClass(lecture.status)}`}>
+                      {lecture.status}
+                    </span>
+                  </td>
+                  <td>
+                    <div className={styles.actions}>
+                      <button className={styles.actionBtn} onClick={() => openModal(lecture)} title="Edit">✏️</button>
+                      <button className={styles.actionBtn} onClick={() => handleDelete(lecture.id)} title="Delete">🗑️</button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+              {lectures.length === 0 && (
+                <tr>
+                  <td colSpan={5} style={{ textAlign: "center", padding: "2rem" }}>No lectures found.</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {isModalOpen && (

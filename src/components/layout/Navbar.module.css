@@ -84,8 +84,38 @@
   font-size: 0.95rem;
 }
 
+.leftSection {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.hamburgerButton {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  cursor: pointer;
+  padding: 4px;
+}
+
 @media (max-width: 768px) {
+  .navbar {
+    padding: 1rem;
+  }
+  
+  .hamburgerButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .searchBox {
+    display: none;
+  }
+  
+  .userName {
     display: none;
   }
 }

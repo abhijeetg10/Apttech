@@ -149,16 +149,34 @@
   font-size: 1.1rem;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .loginContainer {
     flex-direction: column;
   }
   
   .brandSection {
     padding: 2rem;
+    text-align: center;
+  }
+
+  .brandHeader {
+    justify-content: center;
+  }
+
+  .features {
+    display: none; /* Hide features on mobile to save space */
+  }
+
+  .portalInfo {
+    margin-top: 1.5rem;
+    margin-bottom: 0;
   }
   
   .formSection {
     padding: 2rem;
+  }
+
+  .loginCard {
+    padding: 1.5rem;
   }
 }

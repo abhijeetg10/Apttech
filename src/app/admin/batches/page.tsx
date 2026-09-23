@@ -118,46 +118,48 @@ export default function BatchesPage() {
       </div>
 
       <div className={styles.card}>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>Batch Name</th>
-              <th>Drive Folder ID</th>
-              <th>Students</th>
-              <th>Start Date</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {batches.map(batch => (
-              <tr key={batch.id}>
-                <td style={{ fontWeight: 600 }}>{batch.name}</td>
-                <td style={{ fontFamily: "monospace", color: "var(--color-text-muted)" }}>
-                  {batch.driveFolderId || "Not linked"}
-                </td>
-                <td>{batch._count?.students || 0}</td>
-                <td>{batch.startDate ? new Date(batch.startDate).toLocaleDateString() : 'N/A'}</td>
-                <td>
-                  <span className={`${styles.statusBadge} ${batch.status === 'Active' ? styles.active : styles.completed}`}>
-                    {batch.status}
-                  </span>
-                </td>
-                <td>
-                  <div className={styles.actions}>
-                    <button className={styles.actionBtn} onClick={() => openModal(batch)} title="Edit">✏️</button>
-                    <button className={styles.actionBtn} onClick={() => handleDelete(batch.id)} title="Delete">🗑️</button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-            {batches.length === 0 && (
+        <div className={styles.tableContainer}>
+          <table className={styles.table}>
+            <thead>
               <tr>
-                <td colSpan={6} style={{ textAlign: "center", padding: "2rem" }}>No batches found.</td>
+                <th>Batch Name</th>
+                <th>Drive Folder ID</th>
+                <th>Students</th>
+                <th>Start Date</th>
+                <th>Status</th>
+                <th>Actions</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {batches.map(batch => (
+                <tr key={batch.id}>
+                  <td style={{ fontWeight: 600 }}>{batch.name}</td>
+                  <td style={{ fontFamily: "monospace", color: "var(--color-text-muted)" }}>
+                    {batch.driveFolderId || "Not linked"}
+                  </td>
+                  <td>{batch._count?.students || 0}</td>
+                  <td>{batch.startDate ? new Date(batch.startDate).toLocaleDateString() : 'N/A'}</td>
+                  <td>
+                    <span className={`${styles.statusBadge} ${batch.status === 'Active' ? styles.active : styles.completed}`}>
+                      {batch.status}
+                    </span>
+                  </td>
+                  <td>
+                    <div className={styles.actions}>
+                      <button className={styles.actionBtn} onClick={() => openModal(batch)} title="Edit">✏️</button>
+                      <button className={styles.actionBtn} onClick={() => handleDelete(batch.id)} title="Delete">🗑️</button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+              {batches.length === 0 && (
+                <tr>
+                  <td colSpan={6} style={{ textAlign: "center", padding: "2rem" }}>No batches found.</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {isModalOpen && (
