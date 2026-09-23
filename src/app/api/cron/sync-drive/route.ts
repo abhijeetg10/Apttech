@@ -38,12 +38,20 @@ export async function GET(req: Request) {
 
     let auth;
 
-    // 1. Try Environment Variables (Vercel)
-    if (process.env.GOOGLE_CLIENT_EMAIL && process.env.GOOGLE_PRIVATE_KEY) {
+    // 1. Try Base64 Encoded Credentials (Vercel - Safest Method)
+    if (process.env.GOOGLE_CREDENTIALS_BASE64) {
+      const decoded = Buffer.from(process.env.GOOGLE_CREDENTIALS_BASE64, 'base64').toString('utf-8');
+      const creds = JSON.parse(decoded);
+      auth = new google.auth.JWT({
+        email: creds.client_email,
+        key: creds.private_key,
+        scopes: ['https://www.googleapis.com/auth/drive.readonly']
+      });
+    }
+    // 2. Try Environment Variables (Vercel)
+    else if (process.env.GOOGLE_CLIENT_EMAIL && process.env.GOOGLE_PRIVATE_KEY) {
       let rawKey = process.env.GOOGLE_PRIVATE_KEY;
-      // Strip any accidental leading/trailing quotes and whitespace
       rawKey = rawKey.replace(/^["']|["']$/g, '').trim();
-      // Vercel might escape newlines, so we replace \n with actual newlines
       const privateKey = rawKey.replace(/\\n/g, '\n');
       
       auth = new google.auth.JWT({
