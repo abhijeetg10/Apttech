@@ -13,8 +13,7 @@ export async function GET() {
 
   try {
     const admins = await prisma.user.findMany({
-      where: { role: 'ADMIN' },
-      orderBy: { createdAt: 'asc' }
+      where: { role: 'ADMIN' }
     });
     
     const safeAdmins = admins.map(({ password, ...rest }) => rest);
